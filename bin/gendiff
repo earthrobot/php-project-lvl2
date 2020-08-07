@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+
+<?php
+
+$autoloadPath1 = __DIR__ . '/../../autoload.php';
+$autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadPath1)) {
+    require_once $autoloadPath1;
+} else {
+    require_once $autoloadPath2;
+}
+
+$doc = <<<DOC
+gendiff -h
+
+Generate diff
+
+Usage:
+  gendiff (-h|--help)
+  gendiff (-v|--version)
+
+Options:
+  -h --help                     Show this screen
+  -v --version                  Show version
+
+DOC;
+
+// short form, simple API
+$args = Docopt::handle($doc);
+
+// short form (5.4 or better)
+$args = (new \Docopt\Handler)->handle($sdoc);
+
+// long form, simple API (equivalent to short)
+$params = array(
+    'argv'=>array_slice($_SERVER['argv'], 1),
+    'help'=>true,
+    'version'=>null,
+    'optionsFirst'=>false,
+);
+$args = Docopt::handle($doc, $params);
+
+// long form, full API
+$handler = new \Docopt\Handler(array(
+    'help'=>true,
+    'optionsFirst'=>false,
+));
+$handler->handle($doc, $argv);
