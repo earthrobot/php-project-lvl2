@@ -2,6 +2,21 @@
     "name": "marina/hex2",
     "description": "Hexlet project 2: Difference calculator",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "earthrobot",
+            "email": "syley-20@yandex.ru"
+        }
+    ],
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
+    },
+    "autoload": {
+    	"files": [
+            "src/Gendiff.php"
+    	]
+    },
     "bin": [
         "bin/gendiff"
     ],

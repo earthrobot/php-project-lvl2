@@ -2,6 +2,8 @@
 
 <?php
 
+use function Gendiff\src\Gendiff\gendiff;
+
 $autoloadPath1 = __DIR__ . '/../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
@@ -18,31 +20,26 @@ Generate diff
 Usage:
   gendiff (-h|--help)
   gendiff (-v|--version)
+  gendiff [--format <fmt>] <firstFile> <secondFile>
 
 Options:
   -h --help                     Show this screen
   -v --version                  Show version
+  --format <fmt>                Report format [default: pretty]
 
 DOC;
 
-// short form, simple API
-$args = Docopt::handle($doc);
-
-// short form (5.4 or better)
-$args = (new \Docopt\Handler)->handle($sdoc);
-
-// long form, simple API (equivalent to short)
 $params = array(
     'argv'=>array_slice($_SERVER['argv'], 1),
     'help'=>true,
-    'version'=>null,
+    'version'=>'0.0.1',
     'optionsFirst'=>false,
 );
 $args = Docopt::handle($doc, $params);
 
-// long form, full API
-$handler = new \Docopt\Handler(array(
-    'help'=>true,
-    'optionsFirst'=>false,
-));
-$handler->handle($doc, $argv);
+$json1 = file_get_contents(__DIR__ . '/../' . $args->args['<firstFile>']);
+$json2 = file_get_contents(__DIR__ . '/../' . $args->args['<secondFile>']);
+
+
+
+echo gendiff($json1, $json2);
