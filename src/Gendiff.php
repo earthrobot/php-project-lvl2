@@ -30,7 +30,6 @@ function gendiff($json1, $json2)
                     $diff .= "- " . $k1 . ": " . $item1 . "\n";
                     $diff .= "+ " . $k2 . ": " . $item2 . "\n";
                 }
-
             }
         }
     }
