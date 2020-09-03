@@ -3,6 +3,8 @@
 <?php
 
 use function Gendiff\src\Gendiff\gendiff;
+use function Gendiff\src\Parsers\parse;
+
 
 $autoloadPath1 = __DIR__ . '/../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -37,9 +39,10 @@ $params = array(
 );
 $args = Docopt::handle($doc, $params);
 
-$json1 = file_get_contents(__DIR__ . '/../' . $args->args['<firstFile>']);
-$json2 = file_get_contents(__DIR__ . '/../' . $args->args['<secondFile>']);
+$file1 = file_get_contents(__DIR__ . '/../tests/features/' . $args->args['<firstFile>']);
+$file2 = file_get_contents(__DIR__ . '/../tests/features/' . $args->args['<secondFile>']);
 
+$parsedFile1 = parse($file1, $args->args['<firstFile>']);
+$parsedFile2 = parse($file2, $args->args['<secondFile>']);
 
-
-echo gendiff($json1, $json2);
+echo gendiff($parsedFile1, $parsedFile2);
