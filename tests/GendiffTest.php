@@ -3,7 +3,8 @@
 use PHPUnit\Framework\TestCase;
 use function Gendiff\src\Gendiff\gendiff;
 use function Gendiff\src\Parsers\parse;
-use function Gendiff\src\Printers\diffPrint;
+use function Gendiff\src\Formatters\diffPrint;
+use function Gendiff\src\Formatters\diffDescribe;
 
 $autoloadPath1 = __DIR__ . '/../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -19,55 +20,20 @@ class GendiffTest extends TestCase
     {
         $json1 = file_get_contents(__DIR__ . '/features/newfile1.json');
         $json2 = file_get_contents(__DIR__ . '/features/newfile2.json');
-        $diff = "{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: {
-            key: value
-        }
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-        setting6: {
-            doge: {
-              - wow: too much
-              + wow: so much
-            }
-            key: value
-          + ops: vops
-        }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        fee: 100500
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-    }
-}";            
+        $diff = "Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to [complex value]
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From 'too much' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]";            
         $parsedFile1 = parse($json1);
         $parsedFile2 = parse($json2);
 
-        $this->assertSame($diff, "{\n" . diffPrint(gendiff($parsedFile1, $parsedFile2)) . "\n}");
+        $this->assertSame($diff, diffDescribe(gendiff($parsedFile1, $parsedFile2)));
     }
 }

@@ -17,15 +17,7 @@ function parse($file)
         if (is_object($item)) {
             $result[$k] = parse($item);
         } else {
-            if (is_bool($item)) {
-                if ($item == true) {
-                    $result[$k] = 'true';  
-                } elseif ($item == false) {
-                    $result[$k] = 'false';  
-                }
-            } else {
-                $result[$k] = $item;  
-            }
+            $result[$k] = $item;
         }
     }
 

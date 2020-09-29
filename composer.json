@@ -17,7 +17,8 @@
     	"files": [
             "src/Gendiff.php",
             "src/Parsers.php",
-            "src/Printers.php"
+            "src/Formatters/Printer.php",
+            "src/Formatters/Describer.php"
     	]
     },
     "bin": [
