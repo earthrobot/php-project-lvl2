@@ -42,16 +42,16 @@ function diffPrint(array $diff, $depth = 1)
     foreach ($diff as $item) {
         if (array_key_exists("value", $item) && is_bool($item['value'])) {
             if ($item['value'] === true) {
-              $item['value'] = 'true';  
+                $item['value'] = 'true';  
             } elseif ($item['value'] === false) {
-              $item['value'] = 'false';  
+                $item['value'] = 'false';  
             }
         }
         if (array_key_exists("oldValue", $item) && is_bool($item['oldValue'])) {
             if ($item['oldValue'] === true) {
-              $item['oldValue'] = 'true';  
+                $item['oldValue'] = 'true';  
             } elseif ($item['oldValue'] === false) {
-              $item['oldValue'] = 'false';  
+                $item['oldValue'] = 'false';  
             }
         }
         if ($item['status'] == 'added') {

@@ -28,7 +28,7 @@ function gendiff(array $arr1, array $arr2)
             ];
             unset($arr2[$k]);
         }
-    }  
+    }
 
     foreach ($arr1 as $k => $item) {
         $item2 = $arr2[$k];

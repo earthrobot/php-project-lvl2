@@ -19,7 +19,7 @@ function diffDescribe(array $diff, $parent = [], $depth = 0)
                 $value = "'" . $item['value'] . "'"; 
             }
         }
-        if(array_key_exists("oldValue", $item)) {
+        if (array_key_exists("oldValue", $item)) {
             if (is_bool($item['oldValue']) && $item['oldValue'] === true) {
                 $oldValue = 'true';  
             } elseif (is_bool($item['oldValue']) && $item['oldValue'] === false) {
