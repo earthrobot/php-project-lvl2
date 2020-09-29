@@ -18,7 +18,8 @@
             "src/Gendiff.php",
             "src/Parsers.php",
             "src/Formatters/Printer.php",
-            "src/Formatters/Describer.php"
+            "src/Formatters/Describer.php",
+            "src/Formatters/Json.php"
     	]
     },
     "bin": [

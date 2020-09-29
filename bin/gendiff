@@ -6,6 +6,7 @@ use function Gendiff\src\Gendiff\gendiff;
 use function Gendiff\src\Parsers\parse;
 use function Gendiff\src\Formatters\diffPrint;
 use function Gendiff\src\Formatters\diffDescribe;
+use function Gendiff\src\Formatters\diffJson;
 
 $autoloadPath1 = __DIR__ . '/../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -48,6 +49,8 @@ $parsedFile2 = parse($file2, $args->args['<secondFile>']);
 
 if ($args->args['--format'] == "plain") {
   echo diffDescribe(gendiff($parsedFile1, $parsedFile2));
+} elseif ($args->args['--format'] == "json") {
+  echo diffJson(gendiff($parsedFile1, $parsedFile2));
 } else {
   echo "{\n" . diffPrint(gendiff($parsedFile1, $parsedFile2)) . "\n}";
 }
