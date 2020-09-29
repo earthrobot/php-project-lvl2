@@ -8,7 +8,7 @@ function parse($file, $filename)
 {
     if (strpos($filename, '.json')) {
         if (!is_object($file)) {
-            $file = json_decode($file);    
+            $file = json_decode($file);
         }
         
         $arrFile = (array) $file;
@@ -18,7 +18,7 @@ function parse($file, $filename)
             if (is_object($item)) {
                 $result[$k] = parse($item, $filename);
             } else {
-                $result[$k] = $item;  
+                $result[$k] = $item;
             }
         }
     } elseif (strpos($filename, '.yml')) {
