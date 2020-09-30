@@ -11,3 +11,6 @@ lint-fix:
 
 test:
 	composer run-script phpunit tests
+
+test-coverage:
+	composer run-script phpunit tests -- --coverage-clover
