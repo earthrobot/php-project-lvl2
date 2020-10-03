@@ -2,11 +2,8 @@
 
 <?php
 
-use function Gendiff\src\Gendiff\gendiff;
+use function Gendiff\src\Gendiff\genDiff;
 use function Gendiff\src\Parsers\parse;
-use function Gendiff\src\Formatters\diffPrint;
-use function Gendiff\src\Formatters\diffDescribe;
-use function Gendiff\src\Formatters\diffJson;
 
 $autoloadPath1 = __DIR__ . '/../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -18,19 +15,15 @@ if (file_exists($autoloadPath1)) {
 
 $doc = <<<DOC
 gendiff -h
-
 Generate diff
-
 Usage:
   gendiff (-h|--help)
   gendiff (-v|--version)
   gendiff [--format <fmt>] <firstFile> <secondFile>
-
 Options:
   -h --help                     Show this screen
   -v --version                  Show version
   --format <fmt>                Report format [default: pretty]
-
 DOC;
 
 $params = array(
@@ -41,16 +34,8 @@ $params = array(
 );
 $args = Docopt::handle($doc, $params);
 
-$file1 = file_get_contents(__DIR__ . '/../tests/features/' . $args->args['<firstFile>']);
-$file2 = file_get_contents(__DIR__ . '/../tests/features/' . $args->args['<secondFile>']);
+$file1 = $args->args['<firstFile>'];
+$file2 = $args->args['<secondFile>'];
+$format = $args->args['--format'];
 
-$parsedFile1 = parse($file1, $args->args['<firstFile>']);
-$parsedFile2 = parse($file2, $args->args['<secondFile>']);
-
-if ($args->args['--format'] == "plain") {
-  echo diffDescribe(gendiff($parsedFile1, $parsedFile2));
-} elseif ($args->args['--format'] == "json") {
-  echo diffJson(gendiff($parsedFile1, $parsedFile2));
-} else {
-  echo "{\n" . diffPrint(gendiff($parsedFile1, $parsedFile2)) . "\n}";
-}
+echo genDiff($file1, $file2, $format);
