@@ -7,7 +7,7 @@ use function Differ\Differ\genDiff;
 
 function getPath($fixtureName)
 {
-    $fixturePath = __DIR__ . '/../tests/fixtures/' . $fixtureName;
+    $fixturePath = realpath(__DIR__ . '/fixtures/' . $fixtureName);
     return $fixturePath;
 }
 
@@ -15,9 +15,9 @@ class GendiffTest extends TestCase
 {
     public function testGendiff()
     {
-        $diffPretty = file_get_contents(__DIR__ . '/../tests/fixtures/gendiff_pretty.txt');
-        $diffPlain = file_get_contents(__DIR__ . '/../tests/fixtures/gendiff_plain.txt');
-        $diffJson = file_get_contents(__DIR__ . '/../tests/fixtures/gendiff_json.txt');
+        $diffPretty = file_get_contents(getPath("gendiff_pretty.txt"));
+        $diffPlain = file_get_contents(getPath("gendiff_plain.txt"));
+        $diffJson = file_get_contents(getPath("gendiff_json.txt"));
 
         $filePathJson1 = getPath("newfile1.json");
         $filePathJson2 = getPath("newfile2.json");
