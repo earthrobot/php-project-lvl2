@@ -1,25 +1,23 @@
 <?php
 
-namespace Gendiff\src\Gendiff;
-use function Gendiff\src\Parsers\parse;
-use function Gendiff\src\Formatters\diffPrint;
-use function Gendiff\src\Formatters\diffDescribe;
-use function Gendiff\src\Formatters\diffJson;
+namespace Differ\Differ;
 
-function getTree($fileName)
+use function Differ\Parsers\parse;
+use function Differ\Formatters\Formatters\formatPrint;
+
+function getTree($filePath)
 {
-    if (strpos($fileName, "/") == true) {
-        $filePath = $fileName;
-    } else {
-        $filePath = __DIR__ . '/../tests/fixtures/' . $fileName;
-    }
+    $pathParts = pathinfo($filePath);
+    $extension = $pathParts['extension'];
+
     $fileContent = file_get_contents($filePath);
-    $parsedFile = parse($fileContent, $fileName);
+    $parsedFile = parse($fileContent, $extension);
+
     return $parsedFile;
 }
 
-function buildDiff(array $arr1, array $arr2, $format = "pretty")
-{   
+function buildDiff(array $arr1, array $arr2)
+{
     $diff = [];
 
     foreach ($arr1 as $k => $item) {
@@ -74,18 +72,12 @@ function buildDiff(array $arr1, array $arr2, $format = "pretty")
     return $diff;
 }
 
-function genDiff($file1, $file2, $format = "pretty")
+function genDiff($filePath1, $filePath2, $format = "pretty")
 {
-    $arr1 = getTree($file1);
-    $arr2 = getTree($file2);
+    $arr1 = getTree($filePath1);
+    $arr2 = getTree($filePath2);
    
     $diff = buildDiff($arr1, $arr2, $format);
 
-    if ($format == "plain") {
-        return diffDescribe($diff);
-    } elseif ($format == "json") {
-        return diffJson($diff);
-    } else {
-        return "{\n" . diffPrint($diff) . "\n}";
-    }
+    return formatPrint($diff, $format);
 }

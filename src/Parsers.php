@@ -1,15 +1,15 @@
 <?php
 
-namespace Gendiff\src\Parsers;
+namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parse($file, $filename)
+function parse($file, $extension)
 {
     if (!is_object($file)) {
-        if (strpos($filename, '.json')) {
+        if ($extension == "json") {
             $file = json_decode($file);
-        } elseif (strpos($filename, '.yml')) {
+        } elseif ($extension == "yml") {
             $file = Yaml::parse($file, Yaml::PARSE_OBJECT_FOR_MAP);
         }
     }
@@ -19,7 +19,7 @@ function parse($file, $filename)
 
     foreach ($arrFile as $k => $item) {
         if (is_object($item)) {
-            $result[$k] = parse($item, $filename);
+            $result[$k] = parse($item, $extension);
         } else {
             $result[$k] = $item;
         }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Gendiff\src\Formatters;
+namespace Differ\Formatters\Json;
 
-function diffJson(array $diff)
+function diffPrint(array $diff)
 {
     return json_encode($diff);
 }

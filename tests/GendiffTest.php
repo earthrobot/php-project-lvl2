@@ -1,9 +1,15 @@
 <?php
 
-namespace Gendiff\tests\GendiffTest;
+namespace Differ\GendiffTest;
 
 use PHPUnit\Framework\TestCase;
-use function Gendiff\src\Gendiff\genDiff;
+use function Differ\Differ\genDiff;
+
+function getPath($fixtureName)
+{
+    $fixturePath = __DIR__ . '/../tests/fixtures/' . $fixtureName;
+    return $fixturePath;
+}
 
 class GendiffTest extends TestCase
 {
@@ -13,12 +19,18 @@ class GendiffTest extends TestCase
         $diffPlain = file_get_contents(__DIR__ . '/../tests/fixtures/gendiff_plain.txt');
         $diffJson = file_get_contents(__DIR__ . '/../tests/fixtures/gendiff_json.txt');
 
-        $this->assertSame($diffPretty, genDiff("newfile1.json", "newfile2.json"));
-        $this->assertSame($diffPlain, genDiff("newfile1.json", "newfile2.json", "plain"));
-        $this->assertSame($diffJson, genDiff("newfile1.json", "newfile2.json", "json"));
+        $filePathJson1 = getPath("newfile1.json");
+        $filePathJson2 = getPath("newfile2.json");
 
-        $this->assertSame($diffPretty, genDiff("newfile1.yml", "newfile2.yml"));
-        $this->assertSame($diffPlain, genDiff("newfile1.yml", "newfile2.yml", "plain"));
-        $this->assertSame($diffJson, genDiff("newfile1.yml", "newfile2.yml", "json"));
+        $this->assertSame($diffPretty, genDiff($filePathJson1, $filePathJson2));
+        $this->assertSame($diffPlain, genDiff($filePathJson1, $filePathJson2, "plain"));
+        $this->assertSame($diffJson, genDiff($filePathJson1, $filePathJson2, "json"));
+
+        $filePathYml1 = getPath("newfile1.yml");
+        $filePathYml2 = getPath("newfile2.yml");
+
+        $this->assertSame($diffPretty, genDiff($filePathYml1, $filePathYml2));
+        $this->assertSame($diffPlain, genDiff($filePathYml1, $filePathYml2, "plain"));
+        $this->assertSame($diffJson, genDiff($filePathYml1, $filePathYml2, "json"));
     }
 }

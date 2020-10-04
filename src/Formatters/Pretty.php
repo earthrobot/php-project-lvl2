@@ -1,6 +1,6 @@
 <?php
 
-namespace Gendiff\src\Formatters;
+namespace Differ\Formatters\Pretty;
 
 function flattenAll($collection)
 {

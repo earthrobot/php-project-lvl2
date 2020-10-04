@@ -1,6 +1,7 @@
 {
     "name": "marina/hex2",
     "description": "Hexlet project 2: Difference calculator",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -17,9 +18,10 @@
     	"files": [
             "src/Gendiff.php",
             "src/Parsers.php",
-            "src/Formatters/Printer.php",
-            "src/Formatters/Describer.php",
-            "src/Formatters/Json.php"
+            "src/Formatters/Pretty.php",
+            "src/Formatters/Plain.php",
+            "src/Formatters/Json.php",
+            "src/Formatters/Formatters.php"
     	]
     },
     "bin": [

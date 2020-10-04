@@ -1,8 +1,10 @@
 <?php
 
-namespace Gendiff\src\Formatters;
+namespace Differ\Formatters\Plain;
 
-function diffDescribe(array $diff, $parent = [], $depth = 0)
+use function Differ\Formatters\Pretty\flattenAll;
+
+function diffPrint(array $diff, $parent = [], $depth = 0)
 {
     $result = [];
     $path = "";
@@ -42,7 +44,7 @@ function diffDescribe(array $diff, $parent = [], $depth = 0)
             $result[] = "Property " . $path . " was removed";
         } elseif ($item['status'] == 'nested') {
             $depthChild = $depth + 1;
-            $result[] = diffDescribe($item['children'], $parent, $depthChild);
+            $result[] = diffPrint($item['children'], $parent, $depthChild);
         } elseif ($item['status'] == 'changed') {
             $result[] = "Property " . $path . " was updated. From " . $oldValue . " to " . $value;
         }
