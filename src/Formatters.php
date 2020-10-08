@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Formatters\Formatters;
+namespace Differ\Formatters;
 
 use function Differ\Formatters\Pretty\diffPrint as diffPrintPretty;
 use function Differ\Formatters\Plain\diffPrint as diffPrintPlain;
@@ -13,7 +13,9 @@ function formatPrint(array $diff, $format)
             return diffPrintPlain($diff);
         case "json":
             return diffPrintJson($diff);
-        default:
+        case "pretty":
             return "{\n" . diffPrintPretty($diff) . "\n}";
+        default:
+            return "Unknown format: " . $format;
     }
 }

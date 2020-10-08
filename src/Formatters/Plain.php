@@ -15,7 +15,7 @@ function diffPrint(array $diff, $parent = [], $depth = 0)
                 $value = 'true';
             } elseif (is_bool($item['value']) && $item['value'] === false) {
                 $value = 'false';
-            } elseif (is_array($item['value'])) {
+            } elseif (is_array($item['value']) || is_object($item['value'])) {
                 $value = "[complex value]";
             } else {
                 $value = "'" . $item['value'] . "'";
@@ -26,7 +26,7 @@ function diffPrint(array $diff, $parent = [], $depth = 0)
                 $oldValue = 'true';
             } elseif (is_bool($item['oldValue']) && $item['oldValue'] === false) {
                 $oldValue = 'false';
-            } elseif (is_array($item['oldValue'])) {
+            } elseif (is_array($item['oldValue']) || is_object($item['oldValue'])) {
                 $oldValue = "[complex value]";
             } else {
                 $oldValue = "'" . $item['oldValue'] . "'";

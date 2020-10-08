@@ -4,25 +4,15 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parse($file, $extension)
+function parse($data, $extension)
 {
-    if (!is_object($file)) {
-        if ($extension == "json") {
-            $file = json_decode($file);
-        } elseif ($extension == "yml") {
-            $file = Yaml::parse($file, Yaml::PARSE_OBJECT_FOR_MAP);
-        }
-    }
 
-    $arrFile = (array) $file;
-    $result = [];
-
-    foreach ($arrFile as $k => $item) {
-        if (is_object($item)) {
-            $result[$k] = parse($item, $extension);
-        } else {
-            $result[$k] = $item;
-        }
+    if ($extension == "json") {
+        $result = json_decode($data);
+    } elseif ($extension == "yml") {
+        $result = Yaml::parse($data, Yaml::PARSE_OBJECT_FOR_MAP);
+    } else {
+        return "Wrong file extension: " . $extension;
     }
 
     return $result;
