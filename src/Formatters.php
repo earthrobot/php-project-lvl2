@@ -2,20 +2,20 @@
 
 namespace Differ\Formatters;
 
-use function Differ\Formatters\Pretty\diffPrint as diffPrintPretty;
-use function Differ\Formatters\Plain\diffPrint as diffPrintPlain;
-use function Differ\Formatters\Json\diffPrint as diffPrintJson;
+use function Differ\Formatters\Pretty;
+use function Differ\Formatters\Plain;
+use function Differ\Formatters\Json;
 
 function formatPrint(array $diff, $format)
 {
     switch ($format) {
         case "plain":
-            return diffPrintPlain($diff);
+            return Plain\render($diff);
         case "json":
-            return diffPrintJson($diff);
+            return Json\render($diff);
         case "pretty":
-            return "{\n" . diffPrintPretty($diff) . "\n}";
+            return Pretty\render($diff);
         default:
-            return "Unknown format: " . $format;
+            throw new \Exception("Unknown format: {$format}");
     }
 }

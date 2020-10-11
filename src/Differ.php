@@ -17,50 +17,49 @@ function getParsedData($filePath)
 
 function buildDiff($old, $new)
 {
-    $old = get_object_vars($old);
-    $new = get_object_vars($new);
-    $jointArray = array_replace($old, $new);
-    ksort($jointArray);
-    $diff = [];
+    $oldArray = get_object_vars($old);
+    $newArray = get_object_vars($new);
+    $allKeys = array_unique(array_merge(array_keys($oldArray), array_keys($newArray)));
+    sort($allKeys);
 
-    foreach ($jointArray as $k => $item) {
-        $oldItem = array_key_exists($k, $old) ? $old[$k] : false;
-        if (!array_key_exists($k, $new)) {
-            $diff[$k] = [
-                "name" => $k,
+    $diff = array_map(function ($key) use ($oldArray, $newArray) {
+        if (!array_key_exists($key, $newArray)) {
+            return [
+                "key" => $key,
                 "status" => "deleted",
-                "value" => $item
+                "value" => $oldArray[$key]
             ];
-        } elseif (!array_key_exists($k, $old)) {
-            $diff[$k] = [
-                "name" => $k,
+        } elseif (!array_key_exists($key, $oldArray)) {
+            return [
+                "key" => $key,
                 "status" => "added",
-                "value" => $item
+                "value" => $newArray[$key]
             ];
-        } elseif (is_object($item) && is_object($oldItem)) {
-            $diff[$k] = [
-                "name" => $k,
+        } elseif (is_object($newArray[$key]) && is_object($oldArray[$key])) {
+            return [
+                "key" => $key,
                 "status" => "nested",
-                "children" => buildDiff($oldItem, $item)
+                "children" => buildDiff($oldArray[$key], $newArray[$key])
             ];
         } else {
-            if ($item === $oldItem) {
-                $diff[$k] = [
-                    "name" => $k,
+            if ($newArray[$key] === $oldArray[$key]) {
+                return [
+                    "key" => $key,
                     "status" => 'unchanged',
-                    "value" => $item
+                    "value" => $newArray[$key]
                 ];
             } else {
-                $diff[$k] = [
-                    "name" => $k,
+                return [
+                    "key" => $key,
                     "status" => "changed",
-                    "value" => $item,
-                    "oldValue" => $oldItem
+                    "value" => $newArray[$key],
+                    "oldValue" => $oldArray[$key]
                 ];
             }
         }
-    }
+    }, $allKeys);
 
+    ksort($diff);
     return $diff;
 }
 
@@ -68,7 +67,7 @@ function genDiff($filePath1, $filePath2, $format = "pretty")
 {
     $parsedFile1 = getParsedData($filePath1);
     $parsedFile2 = getParsedData($filePath2);
-   
+       
     $diff = buildDiff($parsedFile1, $parsedFile2);
 
     return formatPrint($diff, $format);

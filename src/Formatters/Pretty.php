@@ -34,7 +34,7 @@ function toString($item, $depth = 1)
     return flattenAll($result);
 }
 
-function diffPrint(array $diff, $depth = 1)
+function buildPrint(array $diff, $depth = 1)
 {
     $result = [];
     $indent = str_repeat("  ", $depth);
@@ -56,43 +56,48 @@ function diffPrint(array $diff, $depth = 1)
         }
         if ($item['status'] == 'added') {
             if (!is_array($item['value']) && !is_object($item['value'])) {
-                $result[] = $indent . "+ " . $item['name'] . ": " . $item['value'];
+                $result[] = $indent . "+ " . $item['key'] . ": " . $item['value'];
             } else {
-                $result[] = $indent . "+ " . $item['name'] . ": {";
+                $result[] = $indent . "+ " . $item['key'] . ": {";
                 $result[] = toString($item['value'], $depth + 2);
                 $result[] = $indent . "  }";
             }
         } elseif ($item['status'] == 'deleted') {
             if (!is_array($item['value']) && !is_object($item['value'])) {
-                $result[] = $indent . "- " . $item['name'] . ": " . $item['value'];
+                $result[] = $indent . "- " . $item['key'] . ": " . $item['value'];
             } else {
-                $result[] = $indent . "- " . $item['name'] . ": {";
+                $result[] = $indent . "- " . $item['key'] . ": {";
                 $result[] = toString($item['value'], $depth + 2);
                 $result[] = $indent . "  }";
             }
         } elseif ($item['status'] == 'nested') {
-            $result[] = $indent . "  " . $item['name'] . ": {";
-            $result[] = diffPrint($item['children'], $depth + 2);
+            $result[] = $indent . "  " . $item['key'] . ": {";
+            $result[] = buildPrint($item['children'], $depth + 2);
             $result[] = $indent . "  }";
         } elseif ($item['status'] == 'changed') {
             if (!is_array($item['oldValue']) && !is_object($item['oldValue'])) {
-                $result[] = $indent . "- " . $item['name'] . ": " . $item['oldValue'];
+                $result[] = $indent . "- " . $item['key'] . ": " . $item['oldValue'];
             } else {
-                $result[] = $indent . "- " . $item['name'] . ": {";
+                $result[] = $indent . "- " . $item['key'] . ": {";
                 $result[] = toString($item['oldValue'], $depth + 2);
                 $result[] = $indent . "  }";
             }
             if (!is_array($item['value']) && !is_object($item['value'])) {
-                $result[] = $indent . "+ " . $item['name'] . ": " . $item['value'];
+                $result[] = $indent . "+ " . $item['key'] . ": " . $item['value'];
             } else {
-                $result[] = $indent . "+ " . $item['name'] . ": {";
+                $result[] = $indent . "+ " . $item['key'] . ": {";
                 $result[] = toString($item['value'], $depth + 2);
                 $result[] = $indent . "  }";
             }
         } elseif ($item['status'] == 'unchanged') {
-            $result[] = $indent . "  " . $item['name'] . ": " . $item['value'];
+            $result[] = $indent . "  " . $item['key'] . ": " . $item['value'];
         }
     }
     
     return implode("\n", flattenAll($result));
+}
+
+function render(array $diff)
+{
+    return "{\n" . buildPrint($diff) . "\n}";
 }

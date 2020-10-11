@@ -12,7 +12,7 @@ function parse($data, $extension)
     } elseif ($extension == "yml") {
         $result = Yaml::parse($data, Yaml::PARSE_OBJECT_FOR_MAP);
     } else {
-        return "Wrong file extension: " . $extension;
+        throw new Exception("Wrong file extension: {$extension}");
     }
 
     return $result;

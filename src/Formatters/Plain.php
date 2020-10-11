@@ -4,7 +4,7 @@ namespace Differ\Formatters\Plain;
 
 use function Differ\Formatters\Pretty\flattenAll;
 
-function diffPrint(array $diff, $parent = [], $depth = 0)
+function render(array $diff, $parent = [], $depth = 0)
 {
     $result = [];
     $path = "";
@@ -32,11 +32,11 @@ function diffPrint(array $diff, $parent = [], $depth = 0)
                 $oldValue = "'" . $item['oldValue'] . "'";
             }
         }
-        $parent[$depth] = $item['name'];
+        $parent[$depth] = $item['key'];
         if ($depth > 0) {
             $path = "'" . implode(".", $parent) . "'";
         } else {
-            $path = "'" . $item['name'] . "'";
+            $path = "'" . $item['key'] . "'";
         }
         if ($item['status'] == 'added') {
             $result[] = "Property " . $path . " was added with value: " . $value;
@@ -44,7 +44,7 @@ function diffPrint(array $diff, $parent = [], $depth = 0)
             $result[] = "Property " . $path . " was removed";
         } elseif ($item['status'] == 'nested') {
             $depthChild = $depth + 1;
-            $result[] = diffPrint($item['children'], $parent, $depthChild);
+            $result[] = render($item['children'], $parent, $depthChild);
         } elseif ($item['status'] == 'changed') {
             $result[] = "Property " . $path . " was updated. From " . $oldValue . " to " . $value;
         }
