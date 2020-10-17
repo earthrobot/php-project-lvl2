@@ -11,7 +11,7 @@ function stringify($value, $depth)
     }
 
     if (is_int($value)) {
-        return strval($value);
+        return (string) $value;
     }
 
     if (is_string($value)) {
@@ -19,14 +19,14 @@ function stringify($value, $depth)
     }
     
     $closingIndent = str_repeat(" ", $depth * 4);
-    $result = array_map(function ($key) use ($value, $depth) {
+    $strings = array_map(function ($key) use ($value, $depth) {
         $indent = str_repeat(" ", ($depth + 1) * 4);
         $stringedVal = stringify($value->$key, $depth + 1);
         return "{$indent}{$key}: {$stringedVal}";
     }, array_keys(get_object_vars($value)));
 
-    $res2 = implode("\n", $result);
-    return "{\n{$res2}\n{$closingIndent}}";
+    $result = implode("\n", $strings);
+    return "{\n{$result}\n{$closingIndent}}";
 }
 
 function buildPrint(array $diff, $depth = 1)
@@ -62,5 +62,6 @@ function buildPrint(array $diff, $depth = 1)
 
 function render(array $diff)
 {
-    return "{\n" . buildPrint($diff) . "\n}";
+    $result = buildPrint($diff);
+    return "{\n{$result}\n}";
 }

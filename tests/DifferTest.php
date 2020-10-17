@@ -7,7 +7,8 @@ use function Differ\Differ\genDiff;
 
 function getPath($fixtureName)
 {
-    $fixturePath = realpath(__DIR__ . '/fixtures/' . $fixtureName);
+    $parts = [__DIR__, 'fixtures', $fixtureName];
+    $fixturePath = implode("/", $parts);
     return $fixturePath;
 }
 

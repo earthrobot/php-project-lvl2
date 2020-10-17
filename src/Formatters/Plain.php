@@ -5,14 +5,14 @@ namespace Differ\Formatters\Plain;
 use function Funct\Collection\flattenAll;
 use function Funct\Collection\compact;
 
-function findValue($value)
+function stringify($value)
 {
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
     }
 
     if (is_int($value)) {
-        return "'{strval($value)}'";
+        return "'{(string) $value}'";
     }
 
     if (is_string($value)) {
@@ -22,33 +22,41 @@ function findValue($value)
     return "[complex value]";
 }
 
-function render(array $diff, $parent = [], $depth = 0)
+function buildPrint(array $diff, $parent = [])
 {
-    $result = array_map(function ($item) use ($parent, $depth) {
+    $result = array_map(function ($item) use ($parent) {
 
-        $parent[$depth] = $item['key'];
-        if ($depth > 0) {
-            $path = "'" . implode(".", $parent) . "'";
+        $parent[] = $item['key'];
+        
+        if ($parent == []) {
+            $path = $item['key'];
         } else {
-            $path = "'" . $item['key'] . "'";
+            $path = implode(".", $parent);
         }
-
+        
         switch ($item['status']) {
             case "added":
-                $value = findValue($item['value']);
-                return "Property {$path} was added with value: {$value}";
+                $value = stringify($item['value']);
+                return "Property '{$path}' was added with value: {$value}";
             case "deleted":
-                return "Property {$path} was removed";
+                return "Property '{$path}' was removed";
             case "nested":
-                return render($item['children'], $parent, $depth + 1);
+                return buildPrint($item['children'], $parent);
             case "changed":
-                $value = findValue($item['value']);
-                $oldValue = findValue($item['oldValue']);
-                return "Property {$path} was updated. From {$oldValue} to {$value}";
-            default:
+                $value = stringify($item['value']);
+                $oldValue = stringify($item['oldValue']);
+                return "Property '{$path}' was updated. From {$oldValue} to {$value}";
+            case "unchanged":
                 break;
+            default:
+                throw new \Exception("Unknown item status: {$item['status']}");
         }
     }, $diff);
     
     return implode("\n", compact(flattenAll($result)));
+}
+
+function render(array $diff)
+{
+    return buildPrint($diff);
 }

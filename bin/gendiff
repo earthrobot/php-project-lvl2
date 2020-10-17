@@ -25,9 +25,10 @@ Options:
   --format <fmt>                Report format [default: pretty]
 DOC;
 
-$params = array(
+$params = [
     'version'=>'0.0.1'
-);
+];
+
 $args = Docopt::handle($doc, $params);
 
 $filePath1 = $args->args['<firstFile>'];

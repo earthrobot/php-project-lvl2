@@ -2,11 +2,7 @@
 
 namespace Differ\Formatters;
 
-use function Differ\Formatters\Pretty;
-use function Differ\Formatters\Plain;
-use function Differ\Formatters\Json;
-
-function formatPrint(array $diff, $format)
+function format(array $diff, $format)
 {
     switch ($format) {
         case "plain":
