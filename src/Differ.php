@@ -4,6 +4,7 @@ namespace Differ\Differ;
 
 use function Differ\Parsers\parse;
 use function Differ\Formatters\formatPrint;
+use function Funct\Collection\union;
 
 function getParsedData($filePath)
 {
@@ -19,7 +20,7 @@ function buildDiff($old, $new)
 {
     $oldArray = get_object_vars($old);
     $newArray = get_object_vars($new);
-    $allKeys = array_unique(array_merge(array_keys($oldArray), array_keys($newArray)));
+    $allKeys = union(array_keys($oldArray), array_keys($newArray));
     sort($allKeys);
 
     $diff = array_map(function ($key) use ($oldArray, $newArray) {
@@ -58,8 +59,7 @@ function buildDiff($old, $new)
             }
         }
     }, $allKeys);
-
-    ksort($diff);
+    
     return $diff;
 }
 
