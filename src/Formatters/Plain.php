@@ -28,13 +28,13 @@ function stringify($value)
 
 function buildPrint(array $diff, $ancestorPath = "")
 {
+    $filteredDiff = array_filter($diff, function ($item) {
+        return $item['status'] != "unchanged";
+    });
+
     $result = array_map(function ($item) use ($ancestorPath) {
 
-        if ($ancestorPath == "") {
-            $path = $item['key'];
-        } else {
-            $path = "{$ancestorPath}.{$item['key']}";
-        }
+        $path = ($ancestorPath == "") ? $item['key'] : "{$ancestorPath}.{$item['key']}";
         
         switch ($item['status']) {
             case "added":
@@ -53,7 +53,7 @@ function buildPrint(array $diff, $ancestorPath = "")
             default:
                 throw new \Exception("Unknown item status: {$item['status']}");
         }
-    }, $diff);
+    }, $filteredDiff);
     
     return implode("\n", compact(flattenAll($result)));
 }
