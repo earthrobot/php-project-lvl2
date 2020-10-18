@@ -11,8 +11,12 @@ function stringify($value)
         return $value ? 'true' : 'false';
     }
 
+    if (is_null($value)) {
+        return 'null';
+    }
+
     if (is_int($value)) {
-        return "'{(string) $value}'";
+        return "{(string) $value}";
     }
 
     if (is_string($value)) {
@@ -22,16 +26,14 @@ function stringify($value)
     return "[complex value]";
 }
 
-function buildPrint(array $diff, $parent = [])
+function buildPrint(array $diff, $ancestorPath = "")
 {
-    $result = array_map(function ($item) use ($parent) {
+    $result = array_map(function ($item) use ($ancestorPath) {
 
-        $parent[] = $item['key'];
-        
-        if ($parent == []) {
+        if ($ancestorPath == "") {
             $path = $item['key'];
         } else {
-            $path = implode(".", $parent);
+            $path = "{$ancestorPath}.{$item['key']}";
         }
         
         switch ($item['status']) {
@@ -41,7 +43,7 @@ function buildPrint(array $diff, $parent = [])
             case "deleted":
                 return "Property '{$path}' was removed";
             case "nested":
-                return buildPrint($item['children'], $parent);
+                return buildPrint($item['children'], $path);
             case "changed":
                 $value = stringify($item['value']);
                 $oldValue = stringify($item['oldValue']);

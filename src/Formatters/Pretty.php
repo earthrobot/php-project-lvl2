@@ -9,6 +9,9 @@ function stringify($value, $depth)
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
     }
+    if (is_null($value)) {
+        return 'null';
+    }
 
     if (is_int($value)) {
         return (string) $value;
