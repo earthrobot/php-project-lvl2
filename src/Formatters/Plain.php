@@ -16,7 +16,7 @@ function stringify($value)
     }
 
     if (is_int($value)) {
-        return "{(string) $value}";
+        return (string) $value;
     }
 
     if (is_string($value)) {
