@@ -28,9 +28,7 @@ function stringify($value)
 
 function buildPrint(array $diff, $ancestorPath = "")
 {
-    $filteredDiff = array_filter($diff, function ($item) {
-        return $item['status'] != "unchanged";
-    });
+    $filteredDiff = array_filter($diff, fn($item) => $item['status'] != "unchanged");
 
     $result = array_map(function ($item) use ($ancestorPath) {
 
@@ -48,8 +46,6 @@ function buildPrint(array $diff, $ancestorPath = "")
                 $value = stringify($item['value']);
                 $oldValue = stringify($item['oldValue']);
                 return "Property '{$path}' was updated. From {$oldValue} to {$value}";
-            case "unchanged":
-                break;
             default:
                 throw new \Exception("Unknown item status: {$item['status']}");
         }
