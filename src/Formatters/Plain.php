@@ -26,35 +26,35 @@ function stringify($value)
     return "[complex value]";
 }
 
-function buildPrint(array $diff, $ancestorPath = "")
+function buildPlain(array $diff, $ancestors = "")
 {
-    $filteredDiff = array_filter($diff, fn($item) => $item['status'] != "unchanged");
+    $filteredDiff = array_filter($diff, fn($item) => $item['type'] != "unchanged");
 
-    $result = array_map(function ($item) use ($ancestorPath) {
+    $result = array_map(function ($item) use ($ancestors) {
 
-        $path = ($ancestorPath == "") ? $item['key'] : "{$ancestorPath}.{$item['key']}";
+        $property = ($ancestors == "") ? $item['key'] : "{$ancestors}.{$item['key']}";
         
-        switch ($item['status']) {
+        switch ($item['type']) {
             case "added":
                 $value = stringify($item['value']);
-                return "Property '{$path}' was added with value: {$value}";
+                return "Property '{$property}' was added with value: {$value}";
             case "deleted":
-                return "Property '{$path}' was removed";
+                return "Property '{$property}' was removed";
             case "nested":
-                return buildPrint($item['children'], $path);
+                return buildPlain($item['children'], $property);
             case "changed":
                 $value = stringify($item['value']);
                 $oldValue = stringify($item['oldValue']);
-                return "Property '{$path}' was updated. From {$oldValue} to {$value}";
+                return "Property '{$property}' was updated. From {$oldValue} to {$value}";
             default:
-                throw new \Exception("Unknown item status: {$item['status']}");
+                throw new \Exception("Unknown item type: {$item['type']}");
         }
     }, $filteredDiff);
     
-    return implode("\n", compact(flattenAll($result)));
+    return implode("\n", flattenAll($result));
 }
 
 function render(array $diff)
 {
-    return buildPrint($diff);
+    return buildPlain($diff);
 }

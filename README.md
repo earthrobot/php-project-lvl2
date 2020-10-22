@@ -8,3 +8,50 @@
 [![asciicast](https://asciinema.org/a/5mqP36VME9t6MF96jVM3MZJgA.svg)](https://asciinema.org/a/5mqP36VME9t6MF96jVM3MZJgA)
 [![asciicast](https://asciinema.org/a/h8gigAH1U9aA2j4jYhJFbARAN.svg)](https://asciinema.org/a/h8gigAH1U9aA2j4jYhJFbARAN)
 [![asciicast](https://asciinema.org/a/rfBFbj041Biq9gDN1BC8hOgxK.svg)](https://asciinema.org/a/rfBFbj041Biq9gDN1BC8hOgxK)
+
+## Setup
+```sh
+$ composer require marina/hex2
+```
+
+## Run tests
+```sh
+$ make test
+```
+
+## Formats
+
+-   pretty
+-   plain
+-   json
+
+## Example
+
+```sh
+$ php bin/gendiff file1.json file2.json
+
+{
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
+}
+```
+
+```sh
+$ php bin/gendiff --format plain file1.yml file2.yml
+
+Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to [complex value]
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From 'too much' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]
+```

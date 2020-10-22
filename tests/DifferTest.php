@@ -15,7 +15,7 @@ function getPath($fixtureName)
 class DifferTest extends TestCase
 {
     /**
-     * @dataProvider additionProvider
+     * @dataProvider casesProvider
      */
 
     public function testGendiff($expected, $filePath1, $filePath2, $format)
@@ -24,22 +24,25 @@ class DifferTest extends TestCase
 
     }
 
-    public function additionProvider()
+    public function casesProvider()
     {
-        $diffPlain = getPath("gendiff_plain.txt");
-        $diffJson = getPath("gendiff_json.txt");
+        $diffPlainPath = getPath("gendiff_plain.txt");
+        $diffJsonPath = getPath("gendiff_json.txt");
+        $diffPrettyPath = getPath("gendiff_pretty.txt");
 
         return [
-            'PlainJson' => [$diffPlain, "newfile1.json", "newfile2.json", "plain"],
-            'JsonJson' => [$diffJson, "newfile1.json", "newfile2.json", "json"],
-            'PlainYML' => [$diffPlain, "newfile1.yml", "newfile2.yml", "plain"],
-            'JsonYML' => [$diffJson, "newfile1.yml", "newfile2.yml", "json"]
+            'PrettyJson' => [$diffPrettyPath, "file1.json", "file2.json", "pretty"],
+            'PlainJson' => [$diffPlainPath, "file1.json", "file2.json", "plain"],
+            'JsonJson' => [$diffJsonPath, "file1.json", "file2.json", "json"],
+            'PrettyYML' => [$diffPrettyPath, "file1.yml", "file2.yml", "pretty"],
+            'PlainYML' => [$diffPlainPath, "file1.yml", "file2.yml", "plain"],
+            'JsonYML' => [$diffJsonPath, "file1.yml", "file2.yml", "json"]
         ];
     }
 
     public function testGendiffWithoutFormat()
     {
-        $this->assertStringEqualsFile(getPath("gendiff_pretty.txt"), genDiff(getPath("newfile1.json"), getPath("newfile2.yml")));
+        $this->assertStringEqualsFile(getPath("gendiff_pretty.txt"), genDiff(getPath("file1.json"), getPath("file2.yml")));
 
     }
 }

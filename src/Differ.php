@@ -11,53 +11,53 @@ function getParsedData($filePath)
     $pathParts = pathinfo($filePath);
 
     $fileContent = file_get_contents($filePath);
-    $parsedFile = parse($fileContent, $pathParts['extension']);
+    $parsedData = parse($fileContent, $pathParts['extension']);
 
-    return $parsedFile;
+    return $parsedData;
 }
 
-function buildDiff($old, $new)
+function buildDiff($data1, $data2)
 {
-    $oldArray = get_object_vars($old);
-    $newArray = get_object_vars($new);
-    $allKeys = union(array_keys($oldArray), array_keys($newArray));
+    $old = get_object_vars($data1);
+    $new = get_object_vars($data2);
+    $allKeys = union(array_keys($old), array_keys($new));
     sort($allKeys);
 
-    $diff = array_map(function ($key) use ($oldArray, $newArray) {
-        if (!array_key_exists($key, $newArray)) {
+    $diff = array_map(function ($key) use ($old, $new) {
+        if (!array_key_exists($key, $new)) {
             return [
                 "key" => $key,
-                "status" => "deleted",
-                "value" => $oldArray[$key]
+                "type" => "deleted",
+                "value" => $old[$key]
             ];
         }
-        if (!array_key_exists($key, $oldArray)) {
+        if (!array_key_exists($key, $old)) {
             return [
                 "key" => $key,
-                "status" => "added",
-                "value" => $newArray[$key]
+                "type" => "added",
+                "value" => $new[$key]
             ];
         }
-        if (is_object($newArray[$key]) && is_object($oldArray[$key])) {
+        if (is_object($new[$key]) && is_object($old[$key])) {
             return [
                 "key" => $key,
-                "status" => "nested",
-                "children" => buildDiff($oldArray[$key], $newArray[$key])
+                "type" => "nested",
+                "children" => buildDiff($old[$key], $new[$key])
             ];
         }
-        if ($newArray[$key] !== $oldArray[$key]) {
+        if ($new[$key] !== $old[$key]) {
             return [
                 "key" => $key,
-                "status" => "changed",
-                "value" => $newArray[$key],
-                "oldValue" => $oldArray[$key]
+                "type" => "changed",
+                "value" => $new[$key],
+                "oldValue" => $old[$key]
             ];
         }
 
         return [
             "key" => $key,
-            "status" => 'unchanged',
-            "value" => $newArray[$key]
+            "type" => 'unchanged',
+            "value" => $new[$key]
         ];
     }, $allKeys);
     

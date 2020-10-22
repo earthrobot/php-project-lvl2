@@ -32,14 +32,14 @@ function stringify($value, $depth)
     return "{\n{$result}\n{$closingIndent}}";
 }
 
-function buildPrint(array $diff, $depth = 1)
+function buildPretty(array $diff, $depth = 1)
 {
     $indent = str_repeat(" ", $depth * 4);
     $indentInner = str_repeat(" ", $depth * 4 - 2);
 
     $result = array_map(function ($item) use ($indent, $indentInner, $depth) {
         $key = $item['key'];
-        switch ($item['status']) {
+        switch ($item['type']) {
             case "added":
                 $stringedVal = stringify($item['value'], $depth);
                 return "{$indentInner}+ {$key}: {$stringedVal}";
@@ -47,7 +47,7 @@ function buildPrint(array $diff, $depth = 1)
                 $stringedVal = stringify($item['value'], $depth);
                 return "{$indentInner}- {$key}: {$stringedVal}";
             case "nested":
-                $stringedVal = buildPrint($item['children'], $depth + 1);
+                $stringedVal = buildPretty($item['children'], $depth + 1);
                 return "{$indent}{$key}: {\n{$stringedVal}\n{$indent}}";
             case "changed":
                 $stringedOldVal = stringify($item['oldValue'], $depth);
@@ -56,7 +56,7 @@ function buildPrint(array $diff, $depth = 1)
             case "unchanged":
                 return "{$indent}{$key}: {$item['value']}";
             default:
-                throw new \Exception("Unknown item status: {$item['status']}");
+                throw new \Exception("Unknown item type: {$item['type']}");
         }
     }, $diff);
     
@@ -65,6 +65,6 @@ function buildPrint(array $diff, $depth = 1)
 
 function render(array $diff)
 {
-    $result = buildPrint($diff);
+    $result = buildPretty($diff);
     return "{\n{$result}\n}";
 }
