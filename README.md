@@ -41,7 +41,7 @@ $ php bin/gendiff file1.json file2.json
 ```
 
 ```sh
-$ php bin/gendiff --format plain file1.yml file2.yml
+$ gendiff --format plain file1.yml file2.yml
 
 Property 'common.follow' was added with value: false
 Property 'common.setting2' was removed
