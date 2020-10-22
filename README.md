@@ -28,7 +28,7 @@ $ make test
 ## Example
 
 ```sh
-$ php bin/gendiff file1.json file2.json
+$ gendiff file1.json file2.json
 
 {
   - follow: false
